@@ -20,6 +20,7 @@
 ├── index.html          # 页面结构和产品流程容器
 ├── style.css           # 视觉样式、动画、响应式和打印样式
 ├── app.js              # 前端交互逻辑、Demo 数据、AI 调用和结果渲染
+├── app.py              # Gunicorn 入口，暴露 app:app
 ├── server.py           # Flask 后端，代理 DeepSeek API 请求
 ├── .env.example        # 本地环境变量模板
 └── requirements.txt    # Python 后端依赖
@@ -119,6 +120,25 @@ const CONFIG = {
 ```
 
 5. 打开浏览器访问 `http://localhost:5000`。
+
+### Gunicorn 部署
+
+如果你的服务器之前使用 Gunicorn，可以继续使用同样的入口格式：
+
+```bash
+gunicorn -w 4 -b 127.0.0.1:5000 app:app
+```
+
+这里的 `app:app` 指的是：
+
+- 第一个 `app`：项目里的 `app.py` 文件。
+- 第二个 `app`：从 `server.py` 暴露出来的 Flask 应用实例。
+
+如果你不想使用兼容入口，也可以直接运行：
+
+```bash
+gunicorn -w 4 -b 127.0.0.1:5000 server:app
+```
 
 ## 后端接口
 
