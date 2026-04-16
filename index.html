@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>如果当时 — 平行人生模拟器</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ==================== 粒子背景 ==================== -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ==================== 页面 1: 首页 ==================== -->
+  <section id="page-landing" class="page active" data-page="landing">
+    <div class="page-inner landing-inner">
+      <div class="landing-brand">如果当时</div>
+      <div class="landing-subtitle">平行人生模拟器</div>
+
+      <div class="landing-divider"></div>
+
+      <h1 class="landing-title">
+        <span class="typewriter" id="typewriter-text"></span>
+        <span class="cursor">|</span>
+      </h1>
+
+      <div class="landing-input-area">
+        <textarea id="regret-input" class="textarea-breathing" placeholder="比如：我当年没有去北京工作，留在了老家，现在总觉得如果去了会不一样……" rows="3"></textarea>
+      </div>
+
+      <p class="landing-ack" id="landing-ack">谢谢你愿意说出来。</p>
+
+      <button id="btn-start" class="btn-primary" disabled>
+        <span>看看另一条路</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <p class="landing-disclaimer">这不是算命，不是心理咨询，只是一次安静的想象力练习。</p>
+    </div>
+  </section>
+
+  <!-- ==================== 页面 2: 选择填写 ==================== -->
+  <section id="page-choices" class="page" data-page="choices">
+    <div class="page-inner choices-inner">
+      <button class="btn-back" id="btn-back-choices" data-back-to="landing">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>返回</span>
+      </button>
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <p class="choices-prompt">现在，让我们把这个选择看得更清楚一些。</p>
+
+      <div class="choices-cards">
+        <div class="choice-card choice-card--past">
+          <div class="choice-card__label">当时的你，做了什么选择</div>
+          <div class="choice-card__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <textarea id="choice-past" placeholder="写下你当时实际做的决定……" rows="3"></textarea>
+          <div class="choice-card__hint">已发生的现实</div>
+        </div>
+
+        <div class="choice-card choice-card--alt">
+          <div class="choice-card__label">如果做了相反的决定</div>
+          <div class="choice-card__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <textarea id="choice-alt" placeholder="如果当时做了完全不同的选择，会是什么？……" rows="3"></textarea>
+          <div class="choice-card__hint">未知的可能</div>
+        </div>
+      </div>
+
+      <p class="choices-note">不需要完美表达，尽量写真实的情况就好。</p>
+
+      <button id="btn-to-profile" class="btn-primary">
+        <span>继续</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ==================== 页面 3: 基础信息 ==================== -->
+  <section id="page-profile" class="page" data-page="profile">
+    <div class="page-inner profile-inner">
+      <button class="btn-back" id="btn-back-profile" data-back-to="choices">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>返回</span>
+      </button>
+      <div class="step-indicator">
+        <div class="step-dot completed"></div>
+        <div class="step-line completed"></div>
+        <div class="step-dot active"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <p class="profile-prompt">让我先简单了解一下你，这样故事会更真实。</p>
+      <p class="profile-note">都可以跳过，但填了会更好。</p>
+
+      <div class="profile-fields">
+        <!-- 年龄 -->
+        <div class="profile-field">
+          <div class="profile-field__label">你当时大概多大</div>
+          <div class="profile-tags" data-field="age">
+            <button class="profile-tag" data-value="18岁以下">18岁以下</button>
+            <button class="profile-tag" data-value="18-22岁">18-22岁</button>
+            <button class="profile-tag" data-value="23-28岁">23-28岁</button>
+            <button class="profile-tag" data-value="29-35岁">29-35岁</button>
+            <button class="profile-tag" data-value="36-45岁">36-45岁</button>
+            <button class="profile-tag" data-value="45岁以上">45岁以上</button>
+          </div>
+        </div>
+
+        <!-- 性别 -->
+        <div class="profile-field">
+          <div class="profile-field__label">你的性别</div>
+          <div class="profile-tags" data-field="gender">
+            <button class="profile-tag" data-value="女生">♀ 女</button>
+            <button class="profile-tag" data-value="男生">♂ 男</button>
+            <button class="profile-tag" data-value="其他">其他</button>
+            <button class="profile-tag" data-value="不想说">不想说</button>
+          </div>
+        </div>
+
+        <!-- 人生阶段 -->
+        <div class="profile-field">
+          <div class="profile-field__label">当时处于人生的哪个阶段</div>
+          <div class="profile-tags" data-field="life_stage">
+            <button class="profile-tag" data-value="上学中">上学中</button>
+            <button class="profile-tag" data-value="刚毕业">刚毕业</button>
+            <button class="profile-tag" data-value="工作几年了">工作几年了</button>
+            <button class="profile-tag" data-value="准备结婚/已婚">准备结婚/已婚</button>
+            <button class="profile-tag" data-value="为人父母">为人父母</button>
+            <button class="profile-tag" data-value="其他">其他</button>
+          </div>
+        </div>
+
+        <!-- 身边人 -->
+        <div class="profile-field">
+          <div class="profile-field__label">当时你身边有谁</div>
+          <div class="profile-tags" data-field="companion">
+            <button class="profile-tag" data-value="一个人">一个人</button>
+            <button class="profile-tag" data-value="有恋人">有恋人</button>
+            <button class="profile-tag" data-value="和朋友一起">和朋友一起</button>
+            <button class="profile-tag" data-value="和家人住">和家人住</button>
+            <button class="profile-tag" data-value="有孩子">有孩子</button>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-to-questions" class="btn-primary">
+        <span>继续</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ==================== 页面 4: 深入对话 ==================== -->
+  <section id="page-questions" class="page" data-page="questions">
+    <div class="page-inner questions-inner">
+      <button class="btn-back" id="btn-back-questions" data-back-to="profile">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>返回</span>
+      </button>
+      <div class="step-indicator">
+        <div class="step-dot completed"></div>
+        <div class="step-line completed"></div>
+        <div class="step-dot completed"></div>
+        <div class="step-line completed"></div>
+        <div class="step-dot active"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <div class="question-progress"><div class="question-progress__bar" id="question-progress-bar"></div></div>
+
+      <div class="questions-transition" id="questions-transition">
+        <p class="questions-intro">好的，现在我想更深入地了解一下你的感受。这些问题没有对错，想到什么就写什么。</p>
+      </div>
+
+      <div class="question-container" id="question-container">
+        <!-- 动态生成的问题 -->
+      </div>
+
+      <div class="questions-actions" id="questions-actions" style="display:none;">
+        <div class="questions-actions__row">
+          <button id="btn-prev-q" class="btn-prev-q" style="visibility:hidden;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>上一题</span>
+          </button>
+          <button id="btn-skip" class="btn-skip">这个问题，我不想回答。</button>
+        </div>
+        <div class="questions-actions__row">
+          <span class="question-counter" id="question-counter"></span>
+          <button id="btn-next-q" class="btn-primary">
+          <span>继续</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        </div>
+      </div>
+
+      <div class="questions-complete" id="questions-complete" style="display:none;">
+        <p class="questions-complete__text">我明白了。让我帮你看看，另一条路可能是什么样子。</p>
+        <button id="btn-to-generating" class="btn-primary btn-primary--gold">
+          <span>开始探索</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 页面 4: 生成等待 ==================== -->
+  <section id="page-generating" class="page" data-page="generating">
+    <div class="page-inner generating-inner">
+      <button class="btn-back" id="btn-back-generating" data-back-to="questions">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>返回</span>
+      </button>
+      <div class="step-indicator">
+        <div class="step-dot completed"></div>
+        <div class="step-line completed"></div>
+        <div class="step-dot completed"></div>
+        <div class="step-line completed"></div>
+        <div class="step-dot completed"></div>
+        <div class="step-line completed"></div>
+        <div class="step-dot active"></div>
+      </div>
+      <div class="generating-visual">
+        <div class="fork-line fork-line--left"></div>
+        <div class="fork-line fork-line--center"></div>
+        <div class="fork-line fork-line--right"></div>
+        <div class="fork-dot"></div>
+      </div>
+
+      <p class="generating-text" id="generating-text">时光正在分叉……</p>
+      <p class="generating-subtext">三条平行的人生，正在向你走来。</p>
+    </div>
+  </section>
+
+  <!-- ==================== 页面 5: 结果展示 ==================== -->
+  <section id="page-result" class="page" data-page="result">
+    <div class="page-inner result-inner">
+      <div class="result-header">
+        <p class="result-intro">以下是三条可能的平行人生。它们不是预言，也不是判断，只是一种想象。</p>
+        <div class="scroll-hint" id="scroll-hint"><span>向下探索</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+      </div>
+
+      <!-- 理想版 -->
+      <div class="timeline-card timeline-card--ideal" id="card-ideal">
+        <div class="timeline-card__badge">光亮的那条路</div>
+        <div class="timeline-card__content" id="content-ideal"></div>
+      </div>
+
+      <!-- 现实版 -->
+      <div class="timeline-card timeline-card--realistic" id="card-realistic">
+        <div class="timeline-card__badge">普通的那条路</div>
+        <div class="timeline-card__content" id="content-realistic"></div>
+      </div>
+
+      <!-- 阴影版 -->
+      <div class="timeline-card timeline-card--shadow" id="card-shadow">
+        <div class="timeline-card__badge">有代价的那条路</div>
+        <div class="timeline-card__content" id="content-shadow"></div>
+      </div>
+
+      <!-- 回到现在 -->
+      <div class="reflection-card" id="card-reflection">
+        <div class="reflection-card__divider"></div>
+        <div class="reflection-card__title">回到现在</div>
+        <div class="reflection-card__content" id="content-reflection"></div>
+      </div>
+
+      <!-- 底部操作 -->
+      <div class="result-actions">
+        <button id="btn-restart" class="btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          <span>再走一次</span>
+        </button>
+        <button id="btn-save" class="btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>保存这次旅程</span>
+        </button>
+      </div>
+
+      <div class="result-disclaimer">
+        <p>如果你觉得这次探索有意义，也许某个朋友也需要。</p>
+        <p class="result-disclaimer__small">本产品由 AI 生成内容，仅供参考与思考，不构成心理咨询或专业建议。如您正在经历心理困扰，请联系专业心理咨询师。</p>
+        <p class="result-disclaimer__hotline">全国心理援助热线：<strong>400-161-9995</strong> ｜ 生命热线：<strong>400-821-1215</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 退出确认弹窗 ==================== -->
+  <div class="modal-overlay" id="modal-exit" style="display:none;">
+    <div class="modal">
+      <p class="modal__text">没关系，随时都可以停下来。</p>
+      <p class="modal__subtext">你的故事只存在于这次对话中，关闭后将完全消失。</p>
+      <div class="modal__actions">
+        <button id="modal-exit-stay" class="btn-secondary">继续探索</button>
+        <button id="modal-exit-leave" class="btn-primary btn-primary--small">回到首页</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 心理危机弹窗 ==================== -->
+  <div class="modal-overlay" id="modal-crisis" style="display:none;">
+    <div class="modal modal--crisis">
+      <p class="modal__text">如果你正在经历困难时刻，请记住，寻求帮助是勇敢的。</p>
+      <div class="modal__hotlines">
+        <p>全国心理援助热线：<strong>400-161-9995</strong></p>
+        <p>生命热线：<strong>400-821-1215</strong></p>
+        <p>北京心理危机研究与干预中心：<strong>010-82951332</strong></p>
+      </div>
+      <button id="modal-crisis-close" class="btn-primary btn-primary--small">我知道了</button>
+    </div>
+  </div>
+
+  <!-- ==================== 退出按钮（悬浮） ==================== -->
+  <button class="btn-exit" id="btn-exit" title="退出">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+
+  <script src="app.js"></script>
+</body>
+</html>
