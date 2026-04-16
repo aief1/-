@@ -1,20 +1,27 @@
 """
-如果当时 — 平行人生模拟器
-Flask Backend Server - AI API Proxy
+如果当时 - 平行人生模拟器
+Flask Backend Server - DeepSeek API Proxy
 """
 
 import os
-import json
-from flask import Flask, request, jsonify
+
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 
-app = Flask(__name__)
-CORS(app)  # Allow cross-origin requests from frontend
+load_dotenv()
 
-# API Key from environment variable (NEVER hardcode)
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
-OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions'
+app = Flask(__name__)
+CORS(app)  # Allow cross-origin requests from frontend.
+
+# API key from environment variable or local .env file. Never put it in frontend code.
+DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY', '')
+DEEPSEEK_API_URL = os.environ.get(
+    'DEEPSEEK_API_URL',
+    'https://api.deepseek.com/chat/completions',
+)
+DEFAULT_MODEL = os.environ.get('DEEPSEEK_MODEL', 'deepseek-chat')
 
 
 @app.route('/api/generate', methods=['POST'])
@@ -26,17 +33,17 @@ def generate():
         if not data or 'messages' not in data:
             return jsonify({'error': 'Missing messages field'}), 400
 
-        if not OPENAI_API_KEY:
-            return jsonify({'error': 'API key not configured on server'}), 500
+        if not DEEPSEEK_API_KEY:
+            return jsonify({'error': 'DeepSeek API key not configured on server'}), 500
 
-        # Forward request to OpenAI
+        # Forward request to DeepSeek's OpenAI-compatible chat endpoint.
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': f'Bearer {OPENAI_API_KEY}',
+            'Authorization': f'Bearer {DEEPSEEK_API_KEY}',
         }
 
         payload = {
-            'model': data.get('model', 'gpt-4o-mini'),
+            'model': data.get('model', DEFAULT_MODEL),
             'messages': data['messages'],
             'temperature': data.get('temperature', 0.8),
             'max_tokens': data.get('max_tokens', 3000),
@@ -44,7 +51,7 @@ def generate():
         }
 
         response = requests.post(
-            OPENAI_API_URL,
+            DEEPSEEK_API_URL,
             headers=headers,
             json=payload,
             timeout=60,
@@ -57,8 +64,7 @@ def generate():
                 'detail': error_detail,
             }), response.status_code
 
-        result = response.json()
-        return jsonify(result)
+        return jsonify(response.json())
 
     except requests.exceptions.Timeout:
         return jsonify({'error': 'Request to AI service timed out'}), 504
@@ -73,7 +79,9 @@ def health():
     """Health check endpoint."""
     return jsonify({
         'status': 'ok',
-        'api_key_configured': bool(OPENAI_API_KEY),
+        'provider': 'deepseek',
+        'model': DEFAULT_MODEL,
+        'api_key_configured': bool(DEEPSEEK_API_KEY),
     })
 
 

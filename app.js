@@ -11,11 +11,11 @@
   // ========================================
   const CONFIG = {
     // Set to true to use demo data (no backend needed)
-    DEMO_MODE: true,
+    DEMO_MODE: false,
     // Backend API endpoint (only needed if DEMO_MODE is false)
-    API_ENDPOINT: '/api/generate',
+    API_ENDPOINT: 'http://localhost:5000/api/generate',
     // AI Model
-    MODEL: 'gpt-4o-mini',
+    MODEL: 'deepseek-chat',
     // Generating animation duration (ms)
     GENERATE_DURATION: 6000,
     // Typewriter speed (ms per character)
