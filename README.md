@@ -56,7 +56,7 @@ http://localhost:8000
 ```js
 DEMO_MODE: false
 MODEL: 'deepseek-chat'
-API_ENDPOINT: 'http://localhost:5000/api/generate'
+API_ENDPOINT: '/api/generate'
 ```
 
 1. 安装 Python 依赖：
@@ -101,6 +101,8 @@ python server.py
 http://localhost:5000
 ```
 
+启动后直接访问这个地址即可看到完整页面，Flask 会同时提供前端页面和 API。
+
 4. 确认前端配置。
 
 当前 `app.js` 已配置为：
@@ -108,7 +110,7 @@ http://localhost:5000
 ```js
 const CONFIG = {
   DEMO_MODE: false,
-  API_ENDPOINT: 'http://localhost:5000/api/generate',
+  API_ENDPOINT: '/api/generate',
   MODEL: 'deepseek-chat',
   GENERATE_DURATION: 6000,
   TYPEWRITER_SPEED: 80,
@@ -116,17 +118,7 @@ const CONFIG = {
 };
 ```
 
-5. 启动前端静态服务器：
-
-```bash
-python -m http.server 8000
-```
-
-然后访问：
-
-```text
-http://localhost:8000
-```
+5. 打开浏览器访问 `http://localhost:5000`。
 
 ## 后端接口
 
@@ -182,7 +174,7 @@ Content-Type: application/json
 ```js
 const CONFIG = {
   DEMO_MODE: false,
-  API_ENDPOINT: 'http://localhost:5000/api/generate',
+  API_ENDPOINT: '/api/generate',
   MODEL: 'deepseek-chat',
   GENERATE_DURATION: 6000,
   TYPEWRITER_SPEED: 80,
@@ -234,7 +226,7 @@ const CONFIG = {
 
 - `server.py` 是否已经启动。
 - `DEEPSEEK_API_KEY` 是否已正确设置，或 `.env` 是否存在。
-- `app.js` 中的 `API_ENDPOINT` 是否指向 `http://localhost:5000/api/generate`。
+- `app.js` 中的 `API_ENDPOINT` 是否为 `/api/generate`，并且页面是否从 `http://localhost:5000` 打开。
 
 ### 为什么不能把 API Key 写在 `app.js` 里？
 

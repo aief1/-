@@ -6,11 +6,13 @@ Flask Backend Server - DeepSeek API Proxy
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, abort, jsonify, request, send_from_directory
 from flask_cors import CORS
 import requests
 
 load_dotenv()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 CORS(app)  # Allow cross-origin requests from frontend.
@@ -22,6 +24,21 @@ DEEPSEEK_API_URL = os.environ.get(
     'https://api.deepseek.com/chat/completions',
 )
 DEFAULT_MODEL = os.environ.get('DEEPSEEK_MODEL', 'deepseek-chat')
+FRONTEND_FILES = {'index.html', 'app.js', 'style.css'}
+
+
+@app.route('/', methods=['GET'])
+def index():
+    """Serve the frontend when visiting the Flask server root."""
+    return send_from_directory(BASE_DIR, 'index.html')
+
+
+@app.route('/<path:filename>', methods=['GET'])
+def frontend_file(filename):
+    """Serve the small set of frontend assets used by index.html."""
+    if filename in FRONTEND_FILES:
+        return send_from_directory(BASE_DIR, filename)
+    abort(404)
 
 
 @app.route('/api/generate', methods=['POST'])

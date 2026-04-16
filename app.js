@@ -13,7 +13,7 @@
     // Set to true to use demo data (no backend needed)
     DEMO_MODE: false,
     // Backend API endpoint (only needed if DEMO_MODE is false)
-    API_ENDPOINT: 'http://localhost:5000/api/generate',
+    API_ENDPOINT: '/api/generate',
     // AI Model
     MODEL: 'deepseek-chat',
     // Generating animation duration (ms)
